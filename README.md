@@ -1,2 +1,2 @@
 # Alfred
-Alfred helps me manage my blog
+Alfred helps me manage my ghost blog
