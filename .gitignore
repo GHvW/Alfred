@@ -12,3 +12,17 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+
+
+.ionide
+.vs
+.vscode
+.fake
+.metals
+
+.lsp
+.clj-kondo
+
+node_modules
+
+test.html
