@@ -1,0 +1,2 @@
+{:main alfred.main
+ :target :nodejs}
