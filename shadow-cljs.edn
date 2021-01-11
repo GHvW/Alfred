@@ -1,0 +1,11 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/dev"
+  "src/main"
+  "src/test"]
+
+ :dependencies
+ [[lilactown/helix "0.0.13"]]
+
+ :builds
+ {}}

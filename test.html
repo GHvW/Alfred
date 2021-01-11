@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet"> -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Press+Start+2P&family=Roboto+Mono&family=Source+Code+Pro&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="test.css">
+        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.5.0/styles/default.min.css">
+        <link rel="stylesheet" href="node_modules/nord-highlightjs/dist/nord.css">
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@10.5.0/highlight.min.js"></script>           
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@10.5.0/languages/clojure.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <pre>
+                <code class="clojure">
+(defn relax [[edge-to dist-to pq] edge]
+  (let [{:keys [from to weight]} edge]
+    ;(println dist-to)
+    ;(println edge-to)
+    ;(println (str "from " from))
+    ;(println (str "to " to))
+    ;(println (str "weight " weight))
+    (if (or
+          (nil? (dist-to to))
+          (> (dist-to to) (+ (dist-to from) weight)))
+      (let [dist-to' (assoc dist-to to (+ (dist-to from) weight))
+            edge-to' (assoc edge-to to edge)]
+        [edge-to' dist-to' (assoc pq to (dist-to' to))])
+      [edge-to dist-to pq])))
+
+(defn dijkstra [edge-to dist-to pq adj-list]
+  (if-let [[next-vertex _] (peek pq)]
+    (let [[e d p] (reduce
+                    relax
+                    [edge-to dist-to (pop pq)]
+                    (adj-list next-vertex))]
+      (recur e d p adj-list))
+    {:edge-to edge-to :dist-to dist-to}))
+
+
+(def graph
+  {:vertices #{:a :b :c :d}
+   :edges #{{:from :a :to :c}
+            {:from :d :to :c}
+            {:from :c :to :b}}})
+
+(def adjlist
+  {:a #{:b :c :d}
+   :b #{:a :e}
+   :c #{:a :d}
+   :d #{:a :c}
+   :e #{:b}})
+
+   
+(defn lazy-traverse-proto 
+  [adjacency-list visited memory]
+  (lazy-seq
+   (when-let [next-vertex (peek memory)]
+     (let [[visited' memory'] (->> next-vertex
+                                   (adjacency-list)
+                                   (map (fn [edge] (edge :to)))
+                                   (reduce 
+                                    (fn [[v m] connection]
+                                      (if (contains? v connection)
+                                        [v m]
+                                        [(conj v connection)
+                                         (conj m connection)]))
+                                    [visited (pop memory)]))]
+       (cons next-vertex (lazy-traverse-proto adjacency-list
+                                              visited'
+                                              memory'))))))
+
+(defn bf-paths-proto
+  "Breadth first search helper for shortest-paths"
+  [adjacency-list paths visited queue]
+  (if (empty? queue)
+    paths
+    (let [vertex (peek queue)
+          [paths' visited' queue'] (->> vertex
+                                        (adjacency-list)
+                                        (map (fn [edge] (edge :to))) ;abstract the "getting edges?"
+                                        (reduce  ; move the reducer to its own fn?
+                                         (fn [[p v q] connection]
+                                           (if (contains? visited connection)
+                                             [p v q]
+                                             [(conj p {connection vertex}) 
+                                              (conj v connection) 
+                                              (conj q connection)]))
+                                         [paths visited (pop queue)]))]
+      (recur adjacency-list paths' visited' queue'))))
+                </code>
+            </pre>
+        </div>
+        <!-- <script src="node_modules/highlight.js/lib/highlight.js"></script> -->
+        <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>
