@@ -8,4 +8,10 @@
  [[lilactown/helix "0.0.13"]]
 
  :builds
- {}}
+  {:main {:target :node-script
+          :output-to "resources/main.js"
+          :main alfred.app.main/main}
+   :renderer {:target :browser
+              :output-dir "resources/public/js"
+              :asset-path "js"
+              :modules {:renderer {:init-fn alfred.app.renderer/main}}}}}

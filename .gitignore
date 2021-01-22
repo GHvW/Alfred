@@ -26,3 +26,9 @@ pom.xml.asc
 .vs
 .vscode
 .idea
+
+.clj-kondo
+.lsp
+
+resources/main.js
+resources/public/js
