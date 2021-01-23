@@ -1,5 +1,5 @@
 (ns alfred.app.main
-  (:require ["electron" :refer [app BrowserWindow]]))
+  (:require ["electron" :refer [app BrowserWindow ipcMain]]))
 
 (def main-window (atom nil))
 
@@ -7,8 +7,8 @@
 (defn init
   []
   (let [window (BrowserWindow.
-                #js {:width 1000
-                     :height 800
+                #js {:width 1400
+                     :height 900
                      :webPreferences {:nodeIntegration true}})]
     (.loadURL window (str "file://" js/__dirname "/public/index.html"))
     (.on window "closed" (fn [] (reset! main-window nil)))
