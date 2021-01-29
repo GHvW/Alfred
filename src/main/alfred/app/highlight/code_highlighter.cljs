@@ -8,7 +8,7 @@
   ([tag children]
    (element tag nil children))
   ([tag attributes children]
-   (str "<" tag (if (nil? attributes) "", " ") attributes ">" children "<" tag "/>")))
+   (str "<" tag (if (nil? attributes) "", " ") attributes ">" children "</" tag ">")))
 
 
 (defn void-element
@@ -24,8 +24,7 @@
 
 (defn highlight-code-block
   [language block]
-  (.-value 
-   (hljs/highlight language (pre (code block)))))
+   (pre (code (.-value(hljs/highlight language block)))))
 
 (defn add5 [it] (+ 5 it))
 
