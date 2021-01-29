@@ -26,9 +26,14 @@ pom.xml.asc
 .vs
 .vscode
 .idea
+.calva
 
 .clj-kondo
 .lsp
 
 resources/main.js
 resources/public/js
+
+test.css
+test.html
+standalone
