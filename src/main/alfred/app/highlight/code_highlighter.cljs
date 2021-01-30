@@ -8,7 +8,11 @@
   ([tag children]
    (element tag nil children))
   ([tag attributes children]
-   (str "<" tag (if (nil? attributes) "", " ") attributes ">" children "</" tag ">")))
+   (str "<" tag (if (nil? attributes) 
+                  "" 
+                  (str " " attributes)) ">" 
+        children 
+        "</" tag ">")))
 
 
 (defn void-element

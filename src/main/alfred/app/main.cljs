@@ -1,7 +1,6 @@
 (ns alfred.app.main
   (:require 
-   ["electron" :refer [app BrowserWindow ipcMain]]
-   [alfred.app.highlight.code-highlighter :refer :all]))
+   ["electron" :refer [app BrowserWindow ipcMain]]))
 
 
 ; (defn ipcHandler
