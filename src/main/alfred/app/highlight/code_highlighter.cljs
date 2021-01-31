@@ -27,15 +27,24 @@
 
 
 (defn highlight-code-block
+  "takes the name of a programming language and 
+  a text block of code from that programming language 
+  and applies highlight.js to the block"
   [language block]
-   (pre (code (.-value(hljs/highlight language block)))))
+  (pre (code (->> block
+                  (hljs/highlight language)
+                  (.-value)))))
 
-(defn add5 [it] (+ 5 it))
+(defn adder [x y] (+ x y))
 
 (comment
   (+ 2 2)
 
+  (apply str ["hello" " " "world" "!"])
+
+  (apply adder [10 20])
+
   (pre (code (+ 2 2)))
-  
+
   (->> "(+ 2 2)"
        (highlight-code-block "clojure")))
