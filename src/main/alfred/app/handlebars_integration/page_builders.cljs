@@ -11,4 +11,6 @@
 
 (comment
 
+  ((generate-html "<h1>{{title}}</h1>") #js {:title "Hello World!"})
+
   (+ 2 4))
