@@ -17,10 +17,11 @@
 
 (comment
 
+  ; read-line
   (let [line-chan (read-line "C:/Users/ghvw/Desktop/artshortlist.txt")]
     (go
       (loop []
         (println (<! line-chan))
         (recur))))
-  
+
   (+ 2 2))
