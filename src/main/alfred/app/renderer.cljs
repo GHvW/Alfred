@@ -1,4 +1,6 @@
-(ns alfred.app.renderer)
+(ns alfred.app.renderer
+  (:require
+   [alfred.app.octokit.octokit-integration :refer [get-page]]))
 
 
 (defn main []

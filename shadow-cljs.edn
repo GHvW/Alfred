@@ -5,7 +5,8 @@
   "src/test"]
 
  :dependencies
- [[lilactown/helix "0.0.13"]]
+ [[lilactown/helix "0.0.13"]
+  [org.clojure/core.match "1.0.0"]]
 
  :builds
   {:main {:target :node-script

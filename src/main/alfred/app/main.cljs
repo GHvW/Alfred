@@ -1,6 +1,8 @@
 (ns alfred.app.main
   (:require 
-   ["electron" :refer [app BrowserWindow ipcMain]]))
+   ["electron" :refer [app BrowserWindow ipcMain]]
+   [cljs.core.async :refer [go chan <! put!]]
+   [cljs.core.match :refer-macros [match]]))
 
 
 ; (defn ipcHandler
@@ -33,8 +35,17 @@
   (when-not @main-window (init)))
 
 
+(defn main-in
+  [channels]
+  (let [out-chan (chan)]
+    (.on "main-in" 
+         (fn [event [request payload]] 
+           (match [request payload]
+             [:github-page data] (put! (channels :github) [data (chan)]))))))
+
 (defn main
   []
   (.on app "window-all-closed" maybe-quit)
   (.on app "activiate" check-window)
-  (.on app "ready" init))
+  (.on app "ready" init)
+  )
