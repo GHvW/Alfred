@@ -1,8 +1,9 @@
 (ns alfred.app.main
-  (:require 
+  (:require
    ["electron" :refer [app BrowserWindow ipcMain]]
-   [cljs.core.async :refer [go chan <! put!]]
-   [cljs.core.match :refer-macros [match]]))
+   [cljs.core.async :refer [go chan <! put! >!]]
+   [cljs.core.match :refer-macros [match]]
+   [alfred.app.octokit.octokit-integration :refer [get-page]]))
 
 
 ; (defn ipcHandler
@@ -24,7 +25,7 @@
     (reset! main-window window)))
 
 
-(defn maybe-quit 
+(defn maybe-quit
   []
   (when (not= js/process.platform "darwin")
     (.quit app)))
@@ -35,17 +36,33 @@
   (when-not @main-window (init)))
 
 
+(defn github-handler
+  []
+  (let [in-chan (chan 1)]
+    (go
+      (loop []
+        (let [[data reply-chan] (<! in-chan)]
+          (>! reply-chan (<! (get-page data)))
+          (recur))))))
+
+
 (defn main-in
-  [channels]
-  (let [out-chan (chan)]
-    (.on "main-in" 
-         (fn [event [request payload]] 
+  [channel-map]
+  (.on ipcMain "main-in"
+       (fn [event [request payload]]
+         (let [reply-chan (chan 1)]
            (match [request payload]
-             [:github-page data] (put! (channels :github) [data (chan)]))))))
+             [:github-page data] (put! (channel-map :github) {:data data
+                                                              :reply-chan reply-chan}))
+           (go
+             (-> event
+                 (.-sender)
+                 (.send "renderer-in" (<! reply-chan))))))))
+
 
 (defn main
   []
   (.on app "window-all-closed" maybe-quit)
   (.on app "activiate" check-window)
   (.on app "ready" init)
-  )
+  (main-in {:github-page (github-handler)}))
