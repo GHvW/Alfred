@@ -36,28 +36,28 @@
   (when-not @main-window (init)))
 
 
-(defn github-handler
-  []
-  (let [in-chan (chan 1)]
-    (go
-      (loop []
-        (let [[data reply-chan] (<! in-chan)]
-          (>! reply-chan (<! (get-page data)))
-          (recur))))))
+;; (defn github-handler
+;;   []
+;;   (let [in-chan (chan 1)]
+;;     (go
+;;       (loop []
+;;         (let [[data reply-chan] (<! in-chan)]
+;;           (>! reply-chan (<! (get-page data)))
+;;           (recur))))))
 
 
-(defn main-in
-  [channel-map]
-  (.on ipcMain "main-in"
-       (fn [event [request payload]]
-         (let [reply-chan (chan 1)]
-           (match [request payload]
-             [:github-page data] (put! (channel-map :github) {:data data
-                                                              :reply-chan reply-chan}))
-           (go
-             (-> event
-                 (.-sender)
-                 (.send "renderer-in" (<! reply-chan))))))))
+;; (defn main-in
+;;   [channel-map]
+;;   (.on ipcMain "main-in"
+;;        (fn [event [request payload]]
+;;          (let [reply-chan (chan 1)]
+;;            (match [request payload]
+;;              [:github-page data] (put! (channel-map :github) {:data data
+;;                                                               :reply-chan reply-chan}))
+;;            (go
+;;              (-> event
+;;                  (.-sender)
+;;                  (.send "renderer-in" (<! reply-chan))))))))
 
 
 (defn main
@@ -65,4 +65,5 @@
   (.on app "window-all-closed" maybe-quit)
   (.on app "activiate" check-window)
   (.on app "ready" init)
-  (main-in {:github-page (github-handler)}))
+  (println "main started"))
+  ;; (main-in {:github-page (github-handler)}))

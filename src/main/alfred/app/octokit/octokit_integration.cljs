@@ -6,6 +6,7 @@
 
 
 (defn get-page ;; :- promise page
+  "github api content output is base64" ;; will need to use atob function to convert
   [request-map] ;; :- { option user option repo option path }
   (let [out-chan (chan 1)]
     (go
