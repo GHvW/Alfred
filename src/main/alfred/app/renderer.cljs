@@ -1,16 +1,23 @@
 (ns alfred.app.renderer
   (:require
-   ["electron" :refer [ipcRenderer]]
+  ;; https://github.com/electron/electron/issues/7300 (issue with electron require)
+  ;;  ["electron" :refer [ipcRenderer]] ;; this is whwat is killing me, need a workaround
    [cljs.core.match :refer-macros [match]]
    [cljs.core.async :refer [go chan <! put!]]))
 
+;; (def electron (.require js/window "electron"))
 
-;; (defn renderer-in
-;;   [store-chan]
-;;   (.on ipcRenderer "renderer-in" 
-;;        (fn [_ response]
-;;          (println "at least made it here")
-;;          (put! store-chan response))))
+;; (def ipcRenderer (partial ()))
+
+(defn renderer-in
+  "test"
+  [store-chan]
+  (-> js/window
+      (.-ipcRenderer)
+      (.on "renderer-in"
+           (fn [_ response]
+             (println "at least made it here")
+             (put! store-chan response)))))
 
 ;; (defn store-router
 ;;   []
