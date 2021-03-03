@@ -47,4 +47,28 @@
   (pre (code (+ 2 2)))
 
   (->> "(+ 2 2)"
-       (highlight-code-block "clojure")))
+       (highlight-code-block "clojure"))
+  
+  (highlight-code-block "clojure" "(defn main
+  []
+  (println \"hello world!\")
+  (go
+    (let [result (<! (caller))]
+      (println (str \"result is \" result)))))
+
+
+(defn get-one
+  []
+  (let [out-chan (chan 1)]
+    (js/setTimeout
+     (fn []
+       (put! out-chan 1))
+     2000)
+    out-chan))
+
+
+(defn caller
+  []
+  (go
+    (let [it (<! (get-one))]
+      it)))"))
